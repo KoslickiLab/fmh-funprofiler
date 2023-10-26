@@ -8,10 +8,11 @@ def main():
     parser = argparse.ArgumentParser(description="Functional profiler for a metagenome sample. The profiler will work with a FracMinHash sketch of KOs, and a metagenome sample. The profiler needs to know which parameters were used to obtain the KO sketch (protein kmer size, and scaled -- see sourmash documentations for more details)")
     parser.add_argument("mg_filename", type=str, help="Name of the metagenome file")
     parser.add_argument("ko_sketch", type=str, help="Filename of KO sketch")
-    parser.add_argument("ksize", type=int, help="Protein kmer size (7, 11, or 15) used to obtain the KO sketch", default=15)
-    parser.add_argument("scaled", type=int, help="The scaled parameter used to obtain the KO sketch", default=1000)
-    parser.add_argument("threshold_bp", type=int, help="The threshold_bp to run sourmash gather (1000 is preferred)", default=1000)
+    parser.add_argument("ksize", type=int, help="Protein kmer size (7, 11, or 15) used to obtain the KO sketch")
+    parser.add_argument("scaled", type=int, help="The scaled parameter used to obtain the KO sketch")
     parser.add_argument("output", type=str, help="Output filename, where the KO profiles will be written")
+    parser.add_argument('-t', "--threshold_bp", type=int, help="The threshold_bp to run sourmash gather (1000 is preferred)", default=1000)
+    parser.add_argument('-g', "--gather_file", type=str, help="The sourmash gather output")
     args = parser.parse_args()
 
     mg_filename = args.mg_filename
@@ -20,6 +21,7 @@ def main():
     scaled = args.scaled
     output_filename = args.output
     threshold_bp = args.threshold_bp
+    gather_output_filename = args.gather_file
 
     print('Creating metagenome sketch...')
     metagenome_sketch_filename = f'{mg_filename}_sketch_{int(time.time())}.tmp'
@@ -28,7 +30,8 @@ def main():
     print(f'Sketch of the metagenome has been saved to {metagenome_sketch_filename}')
 
     # run gather
-    gather_output_filename = f'{mg_filename}_gather_{int(time.time())}.tmp'
+    if gather_output_filename is None:
+        gather_output_filename = f'{mg_filename}_gather_{int(time.time())}.tmp'
     print('Running sourmash gather...')
     cmd = f'sourmash gather --protein -k {ksize} --estimate-ani-ci --threshold-bp {threshold_bp} ' + metagenome_sketch_filename + ' ' + ko_sketch + ' -o ' + gather_output_filename
     subprocess.call( cmd.split(' ') )
@@ -47,7 +50,7 @@ def main():
 
     # remove tmps
     print('Removing temps...')
-    subprocess.call( ['rm', metagenome_sketch_filename, gather_output_filename] )
+    subprocess.call( ['rm', metagenome_sketch_filename] )
     print('Exiting...')
 
 
