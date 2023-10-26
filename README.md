@@ -22,6 +22,11 @@ Obtain the pre-built KO sketches from here:
 ```
 https://zenodo.org/records/10045253
 ```
+The sbt's are sequence-bloom-trees. They make the pipeline run faster. We have
+made three sbt's available to use: scaled=1000 and k=7, 11, and 15.
+
+We also have made two sig.zip files available: one with scaled=500, and another
+with scaled=1000. Each of these files have three k values: 7, 11, and 15.
 
 ## Usage
 ```
