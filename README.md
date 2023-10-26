@@ -11,7 +11,7 @@ A functional profiler for metagenome samples.
 ## Installation
 To install, do the following after cloning this repository:
 ```
-cobda create -n funcprofiler
+conda create -n funcprofiler
 conda activate funprofiler
 conda install sourmash
 ```
