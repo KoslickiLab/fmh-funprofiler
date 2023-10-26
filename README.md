@@ -12,8 +12,8 @@ A functional profiler for metagenome samples.
 To install, do the following after cloning this repository:
 ```
 conda create -n funcprofiler
-conda activate funprofiler
-conda install sourmash
+conda activate funcprofiler
+conda install -c bioconda -c conda-forge sourmash pandas
 ```
 You can use other python package managers to do the same thing.
 
