@@ -33,3 +33,4 @@ A metagenome example fastq file is available with this repository. Obtain the KO
 ```
 python funcprofiler.py metagenome_example.fastq KOs_sbt_scaled_1000_k_15.sbt.zip 15 1000 1000 ko_profiles
 ```
+The output is a csv file named `ko_profiles`, which lists the KOs that are present in the sample, and the second column gives their relative abundances.

@@ -42,7 +42,7 @@ def main():
     df_tmp = df_new['f_unique_weighted'].divide(sum_weights)
     df_out = pd.concat([df['name'], df_tmp], axis=1)
     df_out.columns = ['ko_id', 'abundance']
-    df_out.to_csv(output_filename)
+    df_out.to_csv(output_filename, index=False)
     print(f'KO profiles have been written to {output_filename}')
 
     # remove tmps
