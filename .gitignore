@@ -1,0 +1,8 @@
+# ignore files
+
+# output in the demo folder
+demo/ko_profiles
+demo/KOs*.zip
+demo/*.tmp
+
+
