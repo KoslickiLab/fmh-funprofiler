@@ -2,8 +2,6 @@
 
 A pipeline based on [sourmash](https://sourmash.readthedocs.io/en/latest/) and [KEGG database](https://www.genome.jp/kegg/) to perform functional profiles for metagenomic sequences.
 
-</br>
-
 #### Input:
 
 1. pre-built reference data from KEGG
@@ -57,8 +55,6 @@ python ../funcprofiler.py metagenome_example.fastq KOs_sketched_scaled_1000.sig.
 
 The followings are detailed procedures for this pipeline.
 
-</br>
-
 ## Prepare reference data: k-mer sketches for KEGG KO data
 
 #### Pre-built reference sketches: obtain the pre-built KO sketches here
@@ -96,8 +92,6 @@ sourmash sketch -p protein,k=7,k=11,k=15,abund,scaled=1000 --singleton -o ref_sk
 ```
 python funcprofiler.py -h
 ```
-
-## Example
 
 A metagenome example fastq file is available with this repository. Obtain the KO sketches from the link given above. Then, run the following command:
 
