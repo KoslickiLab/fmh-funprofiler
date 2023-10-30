@@ -31,19 +31,20 @@ conda install -c bioconda -c conda-forge sourmash pandas
 ---
 
 ```
-cd demo 
+git clone https://github.com/KoslickiLab/funprofiler.git
+cd funprofiler/demo 
 
 # Obtain reference data (pre-built sketches for the KEGG database)
 wget https://zenodo.org/records/10045253/files/KOs_sketched_scaled_1000.sig.zip
 
 # profile the example fastq file
-python ../funcprofiler.py metagenome_example.fastq KOs_sketched_scaled_1000.sig.zip  7 1000 ko_profiles
+python ../funcprofiler.py metagenome_example.fastq KOs_sketched_scaled_1000.sig.zip  7 1000 ko_profiles -g gather_out
 ```
 
 #### Output:
 
 1. `ko_profiles`: a csv file with abundance for all identified KOs in the sample
-2. `__gather_out`: the full `sourmash gather` output containing more KO-based statistics, check [here](https://sourmash.readthedocs.io/en/latest/classifying-signatures.html) for more details
+2. `gather_out`: the full `sourmash gather` output containing more KO-based statistics, check [here](https://sourmash.readthedocs.io/en/latest/classifying-signatures.html) for more details
 
 
 
