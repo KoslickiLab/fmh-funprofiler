@@ -59,6 +59,48 @@ def sanity_check():
         sys.exit(1)
 
 """
+Check the arguments for correctness.
+"""
+def check_args(args):
+    # check if the metagenome file exists
+    if not os.path.exists(args.mg_filename):
+        print(f'Error: Metagenome file {args.mg_filename} does not exist. Exiting...')
+        sys.exit(1)
+
+    # check if the KO sketch file exists
+    if not os.path.exists(args.ko_sketch):
+        print(f'Error: KO sketch file {args.ko_sketch} does not exist. Exiting...')
+        sys.exit(1)
+
+    # check if the protein kmer size is valid
+    if args.ksize not in [7, 11, 15]:
+        print(f'Error: Protein kmer size {args.ksize} is not valid. Exiting...')
+        sys.exit(1)
+
+    # check if the scaled parameter is valid
+    if args.scaled < 1:
+        print(f'Error: Scaled parameter {args.scaled} is not valid. Exiting...')
+        sys.exit(1)
+
+    # check if the output filename is valid
+    if os.path.exists(args.output):
+        print(f'Error: Output filename {args.output} already exists. Exiting...')
+        sys.exit(1)
+
+    # check if the gather output filename is valid
+    if args.gather_file is not None and os.path.exists(args.gather_file):
+        print(f'Error: Gather output filename {args.gather_file} already exists. Exiting...')
+        sys.exit(1)
+
+    # check if the threshold_bp is valid
+    if args.threshold_bp < 1:
+        print(f'Error: threshold_bp {args.threshold_bp} is not valid. Exiting...')
+        sys.exit(1)
+
+    return True
+
+
+"""
 Create a sketch of the metagenome sample. Returns the filename of the sketch.
 """
 def create_sketch(mg_filename, ksize, scaled):
@@ -95,6 +137,9 @@ def main():
 
     # parse arguments
     args = parse_args()
+
+    # check arguments
+    check_args(args)
 
     # extract arguments
     mg_filename = args.mg_filename
