@@ -23,7 +23,7 @@ def parse_args():
     
     # optional arguments
     parser.add_argument('-t', "--threshold_bp", type=int, help="The threshold_bp to run sourmash gather (1000 is preferred)", default=1000)
-    parser.add_argument('-g', "--gather_file", type=str, help="The sourmash gather output")
+    parser.add_argument('-p', "--prefetch_file", type=str, help="The sourmash prefetch output")
     
     # parse arguments
     args = parser.parse_args()
@@ -148,26 +148,27 @@ def main():
     scaled = args.scaled
     output_filename = args.output
     threshold_bp = args.threshold_bp
-    gather_output_filename = args.gather_file
+    prefetch_output_filename = args.prefetch_file
 
     # create metagenome sketch
     metagenome_sketch_filename = create_sketch(mg_filename, ksize, scaled)
 
-    # run gather
-    if gather_output_filename is None:
-        gather_output_filename = f'{mg_filename}_gather_{int(time.time())}.tmp'
-    print('Running sourmash gather...')
-    cmd = f'sourmash gather --protein -k {ksize} --estimate-ani-ci --threshold-bp {threshold_bp} ' + metagenome_sketch_filename + ' ' + ko_sketch + ' -o ' + gather_output_filename
+    # run sourmash prefetch
+    if prefetch_output_filename is None:
+        prefetch_output_filename = f'{mg_filename}_gather_{int(time.time())}.tmp'
+    print('Running sourmash prefetch...')
+    # command: sourmash prefetch <mg_sketch_name> <ko_sketch_name> -o <prefetch_output_filename> -k <ksize> --scaled <scaled> --protein --threshold-bp <threshold_bp>
+    cmd = f'sourmash prefetch {metagenome_sketch_filename} {ko_sketch} -o {prefetch_output_filename} -k {ksize} --scaled {scaled} --protein' + f' --threshold-bp {threshold_bp}'
     subprocess.call( cmd.split(' ') )
-    print(f'sourmash gather results have been stored to {gather_output_filename}')
+    print(f'sourmash prefetch results have been stored to {prefetch_output_filename}')
 
-    # extract ko info from gather output
-    print('Extracting KO abundances from gather output...')
-    df = pd.read_csv(gather_output_filename, delimiter=',')
-    df_new = df[ ['name', 'f_unique_weighted'] ]
-    sum_weights = df_new['f_unique_weighted'].sum(axis=0)
-    df_tmp = df_new['f_unique_weighted'].divide(sum_weights)
-    df_out = pd.concat([df['name'], df_tmp], axis=1)
+    # extract ko info from prefetch output
+    print('Extracting KO abundances from prefetch output...')
+    df = pd.read_csv(prefetch_output_filename, delimiter=',')
+    df_new = df[ ['match_name', 'f_match_query'] ]
+    sum_weights = df_new['f_match_query'].sum(axis=0)
+    df_tmp = df_new['f_match_query'].divide(sum_weights)
+    df_out = pd.concat([df['match_name'], df_tmp], axis=1)
     df_out.columns = ['ko_id', 'abundance']
     df_out.to_csv(output_filename, index=False)
     print(f'KO profiles have been written to {output_filename}')
