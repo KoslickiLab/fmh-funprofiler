@@ -82,16 +82,6 @@ def check_args(args):
         print(f'Error: Scaled parameter {args.scaled} is not valid. Exiting...')
         sys.exit(1)
 
-    # check if the output filename is valid
-    if os.path.exists(args.output):
-        print(f'Error: Output filename {args.output} already exists. Exiting...')
-        sys.exit(1)
-
-    # check if the gather output filename is valid
-    if args.gather_file is not None and os.path.exists(args.gather_file):
-        print(f'Error: Gather output filename {args.gather_file} already exists. Exiting...')
-        sys.exit(1)
-
     # check if the threshold_bp is valid
     if args.threshold_bp < 1:
         print(f'Error: threshold_bp {args.threshold_bp} is not valid. Exiting...')
