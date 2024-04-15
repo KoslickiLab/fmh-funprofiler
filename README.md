@@ -1,6 +1,6 @@
 # Metagenomic functional profiler
 
-A pipeline based on [sourmash](https://sourmash.readthedocs.io/en/latest/) and [KEGG database](https://www.genome.jp/kegg/) to perform functional profiles for metagenomic sequences.
+A pipeline based on [sourmash](https://sourmash.readthedocs.io/en/latest/) and [KEGG database](https://www.genome.jp/kegg/) to obtain functional profiles for metagenomic sequences.
 
 #### Input:
 
@@ -10,7 +10,7 @@ A pipeline based on [sourmash](https://sourmash.readthedocs.io/en/latest/) and [
 #### Output:
 
 1. List of KEGG Orthology (KOs) with abundance
-2. Standard `sourmash gather` output with more KO-based statistics (including median weight, containment, ANI etc.)
+2. Standard `sourmash prefetch` output with more KO-based statistics (including containment, ANI etc.)
 
 </br>
 
@@ -38,13 +38,13 @@ cd funprofiler/demo
 wget https://zenodo.org/records/10045253/files/KOs_sketched_scaled_1000.sig.zip
 
 # profile the example fastq file
-python ../funcprofiler.py metagenome_example.fastq KOs_sketched_scaled_1000.sig.zip  7 1000 ko_profiles -g gather_out
+python ../funcprofiler.py metagenome_example.fastq KOs_sketched_scaled_1000.sig.zip 11 1000 ko_profiles -p prefetch_out
 ```
 
 #### Output:
 
 1. `ko_profiles`: a csv file with abundance for all identified KOs in the sample
-2. `gather_out`: the full `sourmash gather` output containing more KO-based statistics, check [here](https://sourmash.readthedocs.io/en/latest/classifying-signatures.html) for more details
+2. `prefetch_out`: the full `sourmash prefetch` output containing more KO-based statistics, check [here](https://sourmash.readthedocs.io/en/latest/command-line.html#sourmash-prefetch-select-subsets-of-very-large-databases-for-more-processing) for more details
 
 
 
@@ -68,6 +68,8 @@ https://zenodo.org/records/10045253
    made three sbt's available to use: scaled=1000 and k=7, 11, and 15.
 2. We also have made two sig.zip files available: one with scaled=500, and another
    with scaled=1000. Each of these files have three k values: 7, 11, and 15.
+
+As the reference database, one can use either the sig.zip files, or the sbt's. The results will be the same.
 
 </br>
 
@@ -98,10 +100,10 @@ A metagenome example fastq file is available with this repository. Obtain the KO
 
 ```
 cd demo
-python ../funcprofiler.py metagenome_example.fastq KOs_sbt_scaled_1000_k_15.sbt.zip 15 1000 ko_profiles
+python ../funcprofiler.py metagenome_example.fastq KOs_sbt_scaled_1000_k_11.sbt.zip 11 1000 ko_profiles
 ```
 
-The output is a csv file named `ko_profiles`, which lists the KOs that are present in the sample, and the second column gives their relative abundances. And there is also an original `sourmash gather` output files recording more k-mer statistics.
+The output is a csv file named `ko_profiles`, which lists the KOs that are present in the sample, and the second column gives their relative abundances.
 
 #### Parameters:
 
@@ -113,6 +115,28 @@ The output is a csv file named `ko_profiles`, which lists the KOs that are prese
 | scaled          | The scale factor in the FracMinHash technique, 1000 is suitable for KEGG KO. |
 | output          | Output filename                                              |
 | -t THRESHOLD_BP | Least bp of overlap for a reference gene (cluster) to be present, default 1000 |
-| -g GATHER_FILE  | Output filename for the sourmash gather output               |
+| -p PREFETCH_FILE  | Output filename for the sourmash prefetch output               |
 
 
+# Running many instances together
+
+One can run many instances of `funcprofiler.py` simultaneously in parallel for many metagenomes. The script is `funcprofiler_many.py`. This script takes a file_list as input, which should contain a list of all input metagenome files, and their target output files.
+
+### Usage
+
+```
+python funcprofiler_many.py <KO_REF_DB> <KSIZE> <SCALED> <FILE_LIST> <THRESHOLD_BP>
+```
+
+#### Parameters
+1. KO_REF_DB: the KO reference db (gig.zip or sbt, detailed above)
+1. KSIZE: proper protein k-mer size
+1. SCALED: proper scaled value (our pre-built ref dbs support 1000 or 500)
+1. FILE_LIST: a text csv file, containing no headers, two columns, first column being the metagenome files, and the second column being the corresponding target ko profile output files
+1. THRESHOLD_BP: the threshold bp to use in sourmash. 50/100/500 etc. are typical values. Larger value is faster with reduced sensitivity.
+
+#### Example usage
+```
+cd demo
+python ../funcprofiler_many.py KOs_sbt_scaled_1000_k_11.sbt.zip 11 1000 list_of_files 100
+```

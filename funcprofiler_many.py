@@ -23,7 +23,7 @@ import os
 import sys
 import subprocess
 import argparse
-from multiprocessing import Pool
+from multiprocessing import Process
 import pandas as pd
 
 def parse_arguments():
@@ -61,18 +61,34 @@ def check_args(args):
 
 def run_funcprofiler(metagenome_filename, output_filename, ko_sketch_filename, ksize, scaled, threshold_bp):
     # run funcprofiler.py. Command: python funcprofiler.py <metagenome_filename> <ko_sketch_filename> <ksize> <scaled> <output_filename> -t <threshold_bp>
+
+    # find the directory that this (currently running) script is in
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+
     try:
-        subprocess.run(['python', 'funcprofiler.py', metagenome_filename, ko_sketch_filename, str(ksize), str(scaled), output_filename, '-t', str(threshold_bp)], check=True)
+        subprocess.run(['python', os.path.join(script_dir, 'funcprofiler.py'), metagenome_filename, ko_sketch_filename, str(ksize), str(scaled), output_filename, '-t', str(threshold_bp)], check=True)
     except subprocess.CalledProcessError as e:
         print(f'Error: funcprofiler.py failed with error code {e.returncode}. Exiting...')
         sys.exit(1)
+    return None
 
 def main():
     args = parse_arguments()
     if check_args(args):
         # read the filelist
-        filelist = pd.read_csv(args.filelist, sep='\t', header=None, names=['metagenome_filename', 'output_filename'])
+        filelist = pd.read_csv(args.filelist, sep=',', header=None, names=['metagenome_filename', 'output_filename'])
 
         # run funcprofiler.py on each pair of metagenome_filename and output_filename
-        with Pool() as p:
-            p.starmap(run_funcprofiler, [(row['metagenome_filename'], row['output_filename'], args.ko_sketch, args.ksize, args.scaled, args.threshold_bp) for index, row in filelist.iterrows()])
+        process_lit = []
+        for index, row in filelist.iterrows():
+            p = Process(target=run_funcprofiler, args=(str(row['metagenome_filename']), str(row['output_filename']), args.ko_sketch, args.ksize, args.scaled, args.threshold_bp))
+            process_lit.append(p)
+
+        for p in process_lit:
+            p.start()
+
+        for p in process_lit:
+            p.join()
+
+if __name__ == '__main__':
+    main()
