@@ -118,7 +118,7 @@ The output is a csv file named `ko_profiles`, which lists the KOs that are prese
 | -p PREFETCH_FILE  | Output filename for the sourmash prefetch output               |
 
 
-# Running many instances together
+# Running for many metagenomes in parallel
 
 One can run many instances of `funcprofiler.py` simultaneously in parallel for many metagenomes. The script is `funcprofiler_many.py`. This script takes a file_list as input, which should contain a list of all input metagenome files, and their target output files.
 
