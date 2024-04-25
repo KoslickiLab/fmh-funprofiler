@@ -16,12 +16,12 @@ A pipeline based on [sourmash](https://sourmash.readthedocs.io/en/latest/) and [
 
 ## Installation
 
-To install, do the following after cloning this repository:
+To install, please have conda installed and do the following:
 
 ```
-conda create -n funcprofiler
+mamba create -n funcprofiler
 conda activate funcprofiler
-conda install -c bioconda -c conda-forge sourmash pandas
+mamba install -c bioconda -c conda-forge sourmash pandas biom-format
 ```
 
 </br>
@@ -39,12 +39,17 @@ wget https://zenodo.org/records/10045253/files/KOs_sketched_scaled_1000.sig.zip
 
 # profile the example fastq file
 python ../funcprofiler.py metagenome_example.fastq KOs_sketched_scaled_1000.sig.zip 11 1000 ko_profiles -p prefetch_out
+
+# change result to biom format
+sed 's/,/\t/g' ko_profiles > temp.tsv
+biom convert -i temp.tsv -o ko_profiles.biom --table-type="Ortholog table" --to-hdf5
 ```
 
 #### Output:
 
 1. `ko_profiles`: a csv file with abundance for all identified KOs in the sample
 2. `prefetch_out`: the full `sourmash prefetch` output containing more KO-based statistics, check [here](https://sourmash.readthedocs.io/en/latest/command-line.html#sourmash-prefetch-select-subsets-of-very-large-databases-for-more-processing) for more details
+3. `ko_profiles.biom`: a biom format of KO profiles. Please note that there is no metadata added now.
 
 
 
@@ -86,7 +91,18 @@ sourmash sketch fromfile -p protein,k=7,k=11,k=15,abund,scaled=1000 -o ref_sketc
 sourmash sketch -p protein,k=7,k=11,k=15,abund,scaled=1000 --singleton -o ref_sketch.sig.zip ${input_file}
 ```
 
+</br>
 
+### More pre-built sketches with different scaling factors
+
+```
+https://zenodo.org/records/10981414
+```
+
+To accommodate analyses at varying sequencing depths, we offer a range of scale factors for sketches of the KEGG database. You may download any or all of these scale factors as needed for your research.
+
+1. k value: 7, 11, and 15
+2. scale factor: 10, 50, 100, 150, 200, and 500
 
 </br>
 
@@ -132,7 +148,7 @@ python funcprofiler_many.py <KO_REF_DB> <KSIZE> <SCALED> <FILE_LIST> <THRESHOLD_
 1. KO_REF_DB: the KO reference db (gig.zip or sbt, detailed above)
 1. KSIZE: proper protein k-mer size
 1. SCALED: proper scaled value (our pre-built ref dbs support 1000 or 500)
-1. FILE_LIST: a text csv file, containing no headers, two columns, first column being the metagenome files, and the second column being the corresponding target ko profile output files
+1. FILE_LIST: a text csv file, containing no headers, two columns, first column being the metagenome file paths, and the second column being the corresponding target ko profile output names
 1. THRESHOLD_BP: the threshold bp to use in sourmash. 50/100/500 etc. are typical values. Larger value is faster with reduced sensitivity.
 
 #### Example usage
