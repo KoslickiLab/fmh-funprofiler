@@ -164,8 +164,8 @@ def main():
     print(f'KO profiles have been written to {output_filename}')
 
     # remove tmps
-    print('Removing temps...')
-    subprocess.call( ['rm', metagenome_sketch_filename] )
+    # print('Removing temps...')
+    # subprocess.call( ['rm', metagenome_sketch_filename] )
     print('Exiting...')
 
 
