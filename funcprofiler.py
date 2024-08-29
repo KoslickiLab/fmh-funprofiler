@@ -103,7 +103,7 @@ def create_sketch(mg_filename, ksize, scaled):
         sys.exit(1)
 
     # generate command and execute
-    cmd = f'sourmash sketch translate -p scaled={scaled},k={ksize} {mg_filename} -o {metagenome_sketch_filename}'
+    cmd = f'sourmash sketch translate -p scaled={scaled},k={ksize},abund {mg_filename} -o {metagenome_sketch_filename}'
     
     # execute command and check for errors
     res = subprocess.call( cmd.split(' ') )
