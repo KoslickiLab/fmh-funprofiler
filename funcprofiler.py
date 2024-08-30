@@ -95,7 +95,7 @@ Create a sketch of the metagenome sample. Returns the filename of the sketch.
 """
 def create_sketch(mg_filename, ksize, scaled):
     print('Creating metagenome sketch...')
-    metagenome_sketch_filename = f'{mg_filename}_sketch_{int(time.time())}.tmp'
+    metagenome_sketch_filename = f'{mg_filename}_sketch_{int(time.time())}.sig.zip'
 
     # make sure that write permission is available on sketch filename
     if os.path.exists(metagenome_sketch_filename):
