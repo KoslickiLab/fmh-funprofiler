@@ -156,3 +156,9 @@ python funcprofiler_many.py <KO_REF_DB> <KSIZE> <SCALED> <FILE_LIST> <THRESHOLD_
 cd demo
 python ../funcprofiler_many.py KOs_sbt_scaled_1000_k_11.sbt.zip 11 1000 list_of_files 100
 ```
+
+### Citing
+`fmh-funprofiler` is published in Bioinformatics, please cite the following.
+```
+Hera MR, Liu S, Wei W, Rodriguez JS, Ma C, Koslicki D. Metagenomic functional profiling: to sketch or not to sketch? Bioinformatics. 2024 Sep 1;40(Suppl 2):ii165-ii173. doi: 10.1093/bioinformatics/btae397. PMID: 39230701; PMCID: PMC11373326.
+```
