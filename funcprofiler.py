@@ -149,19 +149,26 @@ def main():
     print('Running sourmash prefetch...')
     # command: sourmash prefetch <mg_sketch_name> <ko_sketch_name> -o <prefetch_output_filename> -k <ksize> --scaled <scaled> --protein --threshold-bp <threshold_bp>
     cmd = f'sourmash prefetch {metagenome_sketch_filename} {ko_sketch} -o {prefetch_output_filename} -k {ksize} --scaled {scaled} --protein' + f' --threshold-bp {threshold_bp}'
+    print(cmd)
     subprocess.call( cmd.split(' ') )
     print(f'sourmash prefetch results have been stored to {prefetch_output_filename}')
-
-    # extract ko info from prefetch output
-    print('Extracting KO abundances from prefetch output...')
-    df = pd.read_csv(prefetch_output_filename, delimiter=',')
-    df_new = df[ ['match_name', 'f_match_query'] ]
-    sum_weights = df_new['f_match_query'].sum(axis=0)
-    df_tmp = df_new['f_match_query'].divide(sum_weights)
-    df_out = pd.concat([df['match_name'], df_tmp], axis=1)
-    df_out.columns = ['ko_id', 'abundance']
-    df_out.to_csv(output_filename, index=False)
-    print(f'KO profiles have been written to {output_filename}')
+    
+    # check if file is empty
+    if os.path.exists(prefetch_output_filename) and os.stat(prefetch_output_filename).st_size > 0:
+        # extract ko info from prefetch output
+        print('Extracting KO abundances from prefetch output...')
+        df = pd.read_csv(prefetch_output_filename, delimiter=',')
+        df_new = df[ ['match_name', 'f_match_query'] ]
+        sum_weights = df_new['f_match_query'].sum(axis=0)
+        df_tmp = df_new['f_match_query'].divide(sum_weights)
+        df_out = pd.concat([df['match_name'], df_tmp], axis=1)
+        df_out.columns = ['ko_id', 'abundance']
+        df_out.to_csv(output_filename, index=False)
+        print(f'KO profiles have been written to {output_filename}')
+    else:
+        print('Prefetch output file is empty. No matches in KEGG KOs found. Creating an empty KO profile CSV')
+        df_out = pd.DataFrame(columns=['ko_id', 'abundance'])
+        df_out.to_csv(output_filename, index=False)
 
     # remove tmps
     # print('Removing temps...')
