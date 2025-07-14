@@ -2,6 +2,10 @@
 
 A pipeline based on [sourmash](https://sourmash.readthedocs.io/en/latest/) and [KEGG database](https://www.genome.jp/kegg/) to obtain functional profiles for metagenomic sequences.
 
+## Publication
+The associated publication for this tool is accessible via: https://doi.org/10.1093/bioinformatics/btae397
+
+## Basic input/output
 #### Input:
 
 1. pre-built reference data from KEGG
