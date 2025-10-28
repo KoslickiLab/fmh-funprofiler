@@ -124,7 +124,7 @@ def check_sketch(filename: str, sketch_db=None, ksize: int=7) -> bool:
         print("No compatible minhashes found; specify correct ksize and/or molecule type.")
         return False
 
-    except (ValueError, sourmash.exceptions.SourmashError, OSError):
+    except (ValueError, sourmash.exceptions.SourmashError, OSError, Exception):
 
         return False
 
