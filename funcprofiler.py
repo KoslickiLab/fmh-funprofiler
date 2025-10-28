@@ -94,7 +94,7 @@ def check_args(args):
 
     return True
 
-def check_sketch(filename: str, sketch_db=None, ksize: int=7) -> bool:
+def is_sketch(filename: str, sketch_db=None, ksize: int=7) -> bool:
     """
     Return True if `filename` is a valid sourmash sketch
     """
@@ -105,7 +105,7 @@ def check_sketch(filename: str, sketch_db=None, ksize: int=7) -> bool:
                     )
 
         if not sigs:
-            print(f"Error: No signatures found in {filename}.")
+            print(f"Error: No signatures found in {filename} for k={ksize} and moltype='protein'.")
             return False
 
         ref_sigs = list(sourmash.load_file_as_signatures(sketch_db))
@@ -126,6 +126,52 @@ def check_sketch(filename: str, sketch_db=None, ksize: int=7) -> bool:
 
     except (ValueError, sourmash.exceptions.SourmashError, OSError, Exception):
 
+        return False
+
+def is_fasta(filename):
+    """
+    Return True if the file appears to contain at least one FASTA record.
+    """
+    try:
+        with open(filename, 'r') as f:
+            seq = ""
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                if line.startswith('>'):
+                    return True
+                else:
+                    return False
+        return False
+    except Exception:
+        return False
+
+
+def is_fastq(filename):
+    """
+    Return True if the file appears to contain at least one FASTQ record.
+    Minimal validation: checks for @header, sequence line, +, quality line.
+    """
+    try:
+        with open(filename, 'r') as f:
+            while True:
+                header = f.readline().strip()
+                if not header:
+                    return False
+                if not header.startswith('@'):
+                    return False
+
+                seq = f.readline().strip()
+                plus = f.readline().strip()
+                qual = f.readline().strip()
+
+                if not plus.startswith('+'):
+                    return False
+                if len(seq) != len(qual):
+                    return False
+                return True
+    except Exception:
         return False
 
 """
@@ -178,13 +224,16 @@ def main():
     threshold_bp = args.threshold_bp
     prefetch_output_filename = args.prefetch_file
 
-    sketch_check = check_sketch(args.mg_filename, sketch_db=args.ko_sketch, ksize=args.ksize)
+    sketch_check = is_sketch(args.mg_filename, sketch_db=args.ko_sketch, ksize=args.ksize)
 
     if sketch_check:
           metagenome_sketch_filename = mg_filename
-    else:
+    elif is_fasta(mg_filename) or is_fastq(mg_filename):
         # create metagenome sketch
         metagenome_sketch_filename = create_sketch(mg_filename, ksize, scaled)
+    else:
+        print(f'{mg_filename} not testing as properly formatted sketch, fasta, or fastq.')
+        sys.exit()
 
     # run sourmash prefetch
     if prefetch_output_filename is None:
