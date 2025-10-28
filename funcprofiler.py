@@ -1,9 +1,12 @@
+#! /usr/bin/env python
+
 import argparse
 import time
 import subprocess
 import pandas as pd
 import os
 import sys
+import sourmash
 
 """
 Functional profiler for a metagenome sample. The profiler will work with a FracMinHash sketch of KOs,
@@ -15,7 +18,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Functional profiler for a metagenome sample. The profiler will work with a FracMinHash sketch of KOs, and a metagenome sample. The profiler needs to know which parameters were used to obtain the KO sketch (protein kmer size, and scaled -- see sourmash documentations for more details)")
     
     # required arguments
-    parser.add_argument("mg_filename", type=str, help="Name of the metagenome file")
+    parser.add_argument("mg_filename", type=str, help="Name of the metagenome file or sketch")
     parser.add_argument("ko_sketch", type=str, help="Filename of KO sketch")
     parser.add_argument("ksize", type=int, help="Protein kmer size (7, 11, or 15) used to obtain the KO sketch")
     parser.add_argument("scaled", type=int, help="The scaled parameter used to obtain the KO sketch")
@@ -36,7 +39,9 @@ def sanity_check():
     # check if sourmash is installed
     found_error = False
     try:
-        res = subprocess.call( ['sourmash', '--help'] )
+        res = subprocess.call( ['sourmash', '--help'],
+                               stdout=subprocess.DEVNULL,
+                               stderr=subprocess.DEVNULL)
     except:
         print('Error: sourmash is not installed. Please install sourmash before running this script.')
         found_error = True
@@ -89,6 +94,39 @@ def check_args(args):
 
     return True
 
+def check_sketch(filename: str, sketch_db=None, ksize: int=7) -> bool:
+    """
+    Return True if `filename` is a valid sourmash sketch
+    """
+    try:
+        sigs = list(sourmash.load_file_as_signatures(filename,
+                                                     ksize=ksize,
+                                                     select_moltype='protein')
+                    )
+
+        if not sigs:
+            print(f"Error: No signatures found in {filename}.")
+            return False
+
+        ref_sigs = list(sourmash.load_file_as_signatures(sketch_db))
+        if not ref_sigs:
+            print(f"Error: No signatures found in reference {sketch_db}.")
+            return False
+
+        # Look for at least one compatible signature
+        for sig in sigs:
+            for ref in ref_sigs:
+                if sig.minhash.is_compatible(ref.minhash):
+                    print(f"The signature {sig} has a compatibable reference: {ref}")
+                    return True
+
+        # None were compatible
+        print("No compatible minhashes found; specify correct ksize and/or molecule type.")
+        return False
+
+    except (ValueError, sourmash.exceptions.SourmashError, OSError):
+
+        return False
 
 """
 Create a sketch of the metagenome sample. Returns the filename of the sketch.
@@ -140,8 +178,13 @@ def main():
     threshold_bp = args.threshold_bp
     prefetch_output_filename = args.prefetch_file
 
-    # create metagenome sketch
-    metagenome_sketch_filename = create_sketch(mg_filename, ksize, scaled)
+    sketch_check = check_sketch(args.mg_filename, sketch_db=args.ko_sketch, ksize=args.ksize)
+
+    if sketch_check:
+          metagenome_sketch_filename = mg_filename
+    else:
+        # create metagenome sketch
+        metagenome_sketch_filename = create_sketch(mg_filename, ksize, scaled)
 
     # run sourmash prefetch
     if prefetch_output_filename is None:
