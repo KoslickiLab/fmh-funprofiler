@@ -175,6 +175,3 @@ def main():
     # subprocess.call( ['rm', metagenome_sketch_filename] )
     print('Exiting...')
 
-
-if __name__ == '__main__':
-    main()

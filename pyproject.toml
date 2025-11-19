@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fmh-funprofiler"
+version = "1.0.0"
+description = "A pipeline based on sourmash and KEGG database to obtain functional profiles for metagenomic sequences"
+readme = "README.md"
+authors = [
+    { name = "Mahmudur Rahman Hera", email = "mahmudhera93@gmail.com"},
+    { name = "David Koslicki", email = "dmkoslicki@gmail.com"},
+    { name = "Shaopeng Liu", email = "sp.liu.psu@outlook.com"},
+]
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "pandas",
+    "sourmash",
+    "numpy",
+    "biom-format"
+]
+
+[project.scripts]
+funprofiler = "funprofiler.funprofiler:main"
+funprofiler_many = "funprofiler_many.funprofiler_many:main"
+
+
+[project.urls]
+Homepage = "https://github.com/KoslickiLab/fmh-funprofiler"
+Repository = "https://github.com/KoslickiLab/fmh-funprofiler"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+

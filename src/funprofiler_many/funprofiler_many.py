@@ -90,5 +90,3 @@ def main():
         for p in process_lit:
             p.join()
 
-if __name__ == '__main__':
-    main()
