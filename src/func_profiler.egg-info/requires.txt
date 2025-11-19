@@ -1,4 +1,0 @@
-pandas
-sourmash
-numpy
-biom-format
