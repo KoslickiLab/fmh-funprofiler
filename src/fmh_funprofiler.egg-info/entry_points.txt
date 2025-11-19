@@ -1,0 +1,3 @@
+[console_scripts]
+funprofiler = funprofiler.funprofiler:main
+funprofiler_many = funprofiler_many.funprofiler_many:main
