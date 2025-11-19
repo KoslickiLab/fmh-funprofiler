@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "func-profiler"
+name = "fmh-funprofiler"
 version = "1.0.0"
 description = "A pipeline based on sourmash and KEGG database to obtain functional profiles for metagenomic sequences"
 readme = "README.md"
@@ -24,8 +24,8 @@ dependencies = [
 ]
 
 [project.scripts]
-funcprofiler = "funcprofiler.funcprofiler:main"
-funcprofiler_many = "funcprofiler_many.funcprofiler_many:main"
+funprofiler = "funprofiler.funprofiler:main"
+funprofiler_many = "funprofiler_many.funprofiler_many:main"
 
 
 [project.urls]
