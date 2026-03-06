@@ -18,12 +18,12 @@ dependencies = [
 dev = ["pytest>=7"]
 
 [project.scripts]
-funcprofiler = "fmh_funprofiler.funcprofiler:main"
-funcprofiler-many = "fmh_funprofiler.funcprofiler_many:main"
+funcprofiler = "fmhfunprofiler.funcprofiler:main"
+funcprofiler-many = "fmhfunprofiler.funcprofiler_many:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["fmh_funprofiler*"]
+include = ["fmhfunprofiler*"]
