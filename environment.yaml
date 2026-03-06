@@ -1,0 +1,8 @@
+name: fmhfunprofiler
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - pandas
+  - sourmash
+  - biom-format

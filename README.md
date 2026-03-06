@@ -20,11 +20,23 @@ The associated publication for this tool is accessible via: https://doi.org/10.1
 
 ## Installation
 
-To install, please have conda installed and do the following:
+### Option 1: conda environment (recommended)
+
+With conda or mamba installed, create the environment from the provided `environment.yaml`:
 
 ```
-mamba create -n funcprofiler
-conda activate funcprofiler
+conda env create -f environment.yaml
+conda activate fmhfunprofiler
+pip install git+https://github.com/KoslickiLab/funprofiler.git
+```
+
+### Option 2: pip install from GitHub
+
+Install the conda dependencies manually, then pip install the package from GitHub:
+
+```
+mamba create -n fmhfunprofiler
+conda activate fmhfunprofiler
 mamba install -c bioconda -c conda-forge sourmash pandas biom-format
 ```
 
