@@ -6,3 +6,11 @@ demo/KOs*.zip
 demo/*.tmp
 demo/gather_out
 
+# Python packaging build artifacts
+dist/
+build/
+*.egg-info/
+__pycache__/
+*.pyc
+*.pyo
+.eggs/

@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "fmh-funprofiler"
+version = "0.1.0"
+description = "Metagenomic functional profiler using FracMinHash sketches and KEGG KOs"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.8"
+dependencies = [
+    "pandas",
+    "numpy",
+]
+
+[project.scripts]
+funcprofiler = "fmh_funprofiler.funcprofiler:main"
+funcprofiler-many = "fmh_funprofiler.funcprofiler_many:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["fmh_funprofiler*"]
