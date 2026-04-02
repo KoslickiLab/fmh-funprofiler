@@ -66,7 +66,7 @@ def run_funcprofiler(metagenome_filename, output_filename, ko_sketch_filename, k
     script_dir = os.path.dirname(os.path.realpath(__file__))
 
     try:
-        subprocess.run(['python', os.path.join(script_dir, 'funcprofiler.py'), metagenome_filename, ko_sketch_filename, str(ksize), str(scaled), output_filename, '-t', str(threshold_bp)], check=True)
+        subprocess.run([sys.executable, '-m', 'fmhfunprofiler.funcprofiler', metagenome_filename, ko_sketch_filename, str(ksize), str(scaled), output_filename, '-t', str(threshold_bp)], check=True)
     except subprocess.CalledProcessError as e:
         print(f'Error: funcprofiler.py failed with error code {e.returncode}. Exiting...')
         sys.exit(1)

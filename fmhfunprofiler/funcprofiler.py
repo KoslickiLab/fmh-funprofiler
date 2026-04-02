@@ -1,15 +1,15 @@
+"""
+Functional profiler for a metagenome sample. The profiler will work with a FracMinHash sketch of KOs,
+ and a metagenome sample. The profiler needs to know which parameters were used to obtain the
+ KO sketch (protein kmer size, and scaled -- see sourmash documentations for more details about these parameters)
+"""
+
 import argparse
 import time
 import subprocess
 import pandas as pd
 import os
 import sys
-
-"""
-Functional profiler for a metagenome sample. The profiler will work with a FracMinHash sketch of KOs,
- and a metagenome sample. The profiler needs to know which parameters were used to obtain the 
- KO sketch (protein kmer size, and scaled -- see sourmash documentations for more details about these parameters)
-"""
 def parse_args():
     # create parser
     parser = argparse.ArgumentParser(description="Functional profiler for a metagenome sample. The profiler will work with a FracMinHash sketch of KOs, and a metagenome sample. The profiler needs to know which parameters were used to obtain the KO sketch (protein kmer size, and scaled -- see sourmash documentations for more details)")
