@@ -27,7 +27,7 @@ With conda or mamba installed, create the environment from the provided `environ
 ```
 conda env create -f environment.yaml
 conda activate fmhfunprofiler
-pip install git+https://github.com/KoslickiLab/funprofiler.git
+pip install git+https://github.com/KoslickiLab/fmh-funprofiler.git
 ```
 
 ### Option 2: pip install from GitHub
@@ -38,6 +38,7 @@ Install the conda dependencies manually, then pip install the package from GitHu
 mamba create -n fmhfunprofiler
 conda activate fmhfunprofiler
 mamba install -c bioconda -c conda-forge sourmash pandas biom-format
+pip install git+https://github.com/KoslickiLab/fmh-funprofiler.git
 ```
 
 </br>
@@ -47,14 +48,16 @@ mamba install -c bioconda -c conda-forge sourmash pandas biom-format
 ---
 
 ```
-git clone https://github.com/KoslickiLab/funprofiler.git
-cd funprofiler/demo 
+git clone https://github.com/KoslickiLab/fmh-funprofiler.git
+cd fmh-funprofiler
+pip install .
+cd demo
 
 # Obtain reference data (pre-built sketches for the KEGG database)
 wget https://zenodo.org/records/10045253/files/KOs_sketched_scaled_1000.sig.zip
 
 # profile the example fastq file
-python ../funcprofiler.py metagenome_example.fastq KOs_sketched_scaled_1000.sig.zip 11 1000 ko_profiles -p prefetch_out
+funcprofiler metagenome_example.fastq KOs_sketched_scaled_1000.sig.zip 11 1000 ko_profiles -p prefetch_out
 
 # change result to biom format
 sed 's/,/\t/g' ko_profiles > temp.tsv
@@ -125,14 +128,14 @@ To accommodate analyses at varying sequencing depths, we offer a range of scale 
 ## Pipe usage
 
 ```
-python funcprofiler.py -h
+funcprofiler --help
 ```
 
 A metagenome example fastq file is available with this repository. Obtain the KO sketches from the link given above. Then, run the following command:
 
 ```
 cd demo
-python ../funcprofiler.py metagenome_example.fastq KOs_sbt_scaled_1000_k_11.sbt.zip 11 1000 ko_profiles
+funcprofiler metagenome_example.fastq KOs_sbt_scaled_1000_k_11.sbt.zip 11 1000 ko_profiles
 ```
 
 The output is a csv file named `ko_profiles`, which lists the KOs that are present in the sample, and the second column gives their relative abundances.
@@ -152,16 +155,16 @@ The output is a csv file named `ko_profiles`, which lists the KOs that are prese
 
 # Running for many metagenomes in parallel
 
-One can run many instances of `funcprofiler.py` simultaneously in parallel for many metagenomes. The script is `funcprofiler_many.py`. This script takes a file_list as input, which should contain a list of all input metagenome files, and their target output files.
+One can run many instances of `funcprofiler` simultaneously in parallel for many metagenomes using the `funcprofiler-many` command. This command takes a file_list as input, which should contain a list of all input metagenome files, and their target output files.
 
 ### Usage
 
 ```
-python funcprofiler_many.py <KO_REF_DB> <KSIZE> <SCALED> <FILE_LIST> <THRESHOLD_BP>
+funcprofiler-many <KO_REF_DB> <KSIZE> <SCALED> <FILE_LIST> <THRESHOLD_BP>
 ```
 
 #### Parameters
-1. KO_REF_DB: the KO reference db (gig.zip or sbt, detailed above)
+1. KO_REF_DB: the KO reference db (sig.zip or sbt, detailed above)
 1. KSIZE: proper protein k-mer size
 1. SCALED: proper scaled value (our pre-built ref dbs support 1000 or 500)
 1. FILE_LIST: a text csv file, containing no headers, two columns, first column being the metagenome file paths, and the second column being the corresponding target ko profile output names
@@ -170,7 +173,7 @@ python funcprofiler_many.py <KO_REF_DB> <KSIZE> <SCALED> <FILE_LIST> <THRESHOLD_
 #### Example usage
 ```
 cd demo
-python ../funcprofiler_many.py KOs_sbt_scaled_1000_k_11.sbt.zip 11 1000 list_of_files 100
+funcprofiler-many KOs_sbt_scaled_1000_k_11.sbt.zip 11 1000 list_of_files 100
 ```
 
 ### Citing

@@ -4,5 +4,6 @@ channels:
   - bioconda
 dependencies:
   - pandas
+  - numpy
   - sourmash
   - biom-format

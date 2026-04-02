@@ -8,17 +8,17 @@ import sys
 
 
 def test_package_imports():
-    import fmh_funprofiler  # noqa: F401
+    import fmhfunprofiler  # noqa: F401
 
 
 def test_version():
-    import fmh_funprofiler
+    import fmhfunprofiler
 
-    assert fmh_funprofiler.__version__ == "1.1.0"
+    assert fmhfunprofiler.__version__ == "1.1.0"
 
 
 def test_funcprofiler_importable():
-    from fmh_funprofiler.funcprofiler import (  # noqa: F401
+    from fmhfunprofiler.funcprofiler import (  # noqa: F401
         check_args,
         create_sketch,
         main,
@@ -28,7 +28,7 @@ def test_funcprofiler_importable():
 
 
 def test_funcprofiler_many_importable():
-    from fmh_funprofiler.funcprofiler_many import (  # noqa: F401
+    from fmhfunprofiler.funcprofiler_many import (  # noqa: F401
         check_args,
         main,
         parse_arguments,
@@ -41,7 +41,7 @@ def test_funcprofiler_help_flag():
     result = subprocess.run(
         [sys.executable, "-c",
          "import sys; sys.argv = ['funcprofiler', '--help']; "
-         "from fmh_funprofiler.funcprofiler import parse_args; parse_args()"],
+         "from fmhfunprofiler.funcprofiler import parse_args; parse_args()"],
         capture_output=True,
         text=True,
     )
@@ -54,7 +54,7 @@ def test_funcprofiler_many_help_flag():
     result = subprocess.run(
         [sys.executable, "-c",
          "import sys; sys.argv = ['funcprofiler-many', '--help']; "
-         "from fmh_funprofiler.funcprofiler_many import parse_arguments; parse_arguments()"],
+         "from fmhfunprofiler.funcprofiler_many import parse_arguments; parse_arguments()"],
         capture_output=True,
         text=True,
     )

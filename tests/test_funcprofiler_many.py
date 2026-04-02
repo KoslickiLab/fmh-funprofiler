@@ -9,7 +9,7 @@ import sys
 
 import pytest
 
-from fmh_funprofiler.funcprofiler_many import check_args, parse_arguments
+from fmhfunprofiler.funcprofiler_many import check_args, parse_arguments
 
 
 def _make_args(ko_sketch, ksize=11, scaled=1000, threshold_bp=1000, filelist="files.csv"):

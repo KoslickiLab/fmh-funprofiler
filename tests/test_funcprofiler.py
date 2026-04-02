@@ -10,7 +10,7 @@ import sys
 
 import pytest
 
-from fmh_funprofiler.funcprofiler import check_args, parse_args
+from fmhfunprofiler.funcprofiler import check_args, parse_args
 
 
 def _make_args(mg_filename, ko_sketch, ksize=11, scaled=1000, threshold_bp=1000):
