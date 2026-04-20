@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fmh-funprofiler"
-version = "1.1.0"
+version = "1.1.1"
 description = "Metagenomic functional profiler using FracMinHash sketches and KEGG KOs"
 readme = "README.md"
 license = { text = "MIT" }
